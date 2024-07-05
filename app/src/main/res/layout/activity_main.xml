@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:padding="16dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/button_cutting"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/primary_button_design"
+        android:text="Cutting"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        />
+
+    <TextView
+        android:id="@+id/button_maintenance"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/primary_button_design"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        android:text="Maintenance"
+        />
+
+    <TextView
+        android:id="@+id/button_technical"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/primary_button_design"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        android:text="Technical"
+        />
+
+    <TextView
+        android:id="@+id/button_store"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/primary_button_design"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        android:text="Store"
+        />
+
+
+</LinearLayout>
