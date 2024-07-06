@@ -1,7 +1,5 @@
 package com.mostafiz.bellringer;
 
-import static androidx.core.util.TypedValueCompat.dpToPx;
-
 import android.app.TimePickerDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
     private LinearLayout mainLayout;
     private TextView selectedOptionTextView;
+    private View currentSelectedPrimaryButton = null;
+    private View currentSecondaryOptions = null;
+    private TextView currentHighlightedButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener primaryButtonClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSecondaryOptions((TextView) v);
+                toggleSecondaryOptions((TextView) v);
             }
         };
 
@@ -53,14 +54,22 @@ public class MainActivity extends AppCompatActivity {
         buttonStore.setOnClickListener(primaryButtonClickListener);
     }
 
+    private void toggleSecondaryOptions(TextView selectedButton) {
+        if (currentSelectedPrimaryButton == selectedButton && currentSecondaryOptions != null) {
+            // Hide secondary options if the same primary button is clicked again
+            mainLayout.removeView(currentSecondaryOptions);
+            currentSecondaryOptions = null;
+            currentSelectedPrimaryButton = null;
+        } else {
+            // Show secondary options
+            showSecondaryOptions(selectedButton);
+        }
+    }
+
     private void showSecondaryOptions(TextView selectedButton) {
         // Remove existing secondary options if any
-        for (int i = 0; i < mainLayout.getChildCount(); i++) {
-            View view = mainLayout.getChildAt(i);
-            if (view.getTag() != null && view.getTag().equals("secondary_options")) {
-                mainLayout.removeView(view);
-                i--;
-            }
+        if (currentSecondaryOptions != null) {
+            mainLayout.removeView(currentSecondaryOptions);
         }
 
         // Create a new LinearLayout for secondary options
@@ -71,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         ));
         secondaryOptions.setOrientation(LinearLayout.VERTICAL);
         secondaryOptions.setTag("secondary_options");
-
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(
@@ -84,69 +92,12 @@ public class MainActivity extends AppCompatActivity {
         int marginBottom = dpToPx(5, displayMetrics);
         buttonLayoutParams.setMargins(marginStart, marginTop, marginEnd, marginBottom);
 
-
-
-//        TextView buttonOn = new TextView(this);
-//        buttonOn.setLayoutParams(new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        ));
-//        buttonOn.setText("On");
-//        buttonOn.setPadding(16, 16, 16, 16);
-//        buttonOn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        buttonOn.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        buttonOn.setTextSize(18);
-//        buttonOn.setTypeface(null, Typeface.BOLD);
-//        buttonOn.setBackgroundResource(R.drawable.secondary_button_design);
-//        buttonOn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectedOptionTextView.setText("On selected");
-//            }
-//        });
-//
-//        TextView buttonOff = new TextView(this);
-//        buttonOff.setLayoutParams(new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        ));
-//        buttonOff.setText("Off");
-//        buttonOff.setPadding(16, 16, 16, 16);
-//        buttonOff.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        buttonOff.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        buttonOff.setTextSize(18);
-//        buttonOff.setTypeface(null, Typeface.BOLD);
-//        buttonOff.setBackgroundResource(R.drawable.secondary_button_design);
-//        buttonOff.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectedOptionTextView.setText("Off selected");
-//            }
-//        });
-//
-//        TextView buttonSetTimer = new TextView(this);
-//        buttonSetTimer.setLayoutParams(new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//        ));
-//        buttonSetTimer.setText("Set Timer");
-//        buttonSetTimer.setPadding(16, 16, 16, 16);
-//        buttonSetTimer.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        buttonSetTimer.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        buttonSetTimer.setTextSize(18);
-//        buttonSetTimer.setTypeface(null, Typeface.BOLD);
-//        buttonSetTimer.setBackgroundResource(R.drawable.secondary_button_design);
-//        buttonSetTimer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showTimePickerDialog();
-//            }
-//        });
         TextView buttonOn = createSecondaryButton("On", buttonLayoutParams);
         buttonOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedOptionTextView.setText("On selected");
+                highlightSelectedButton((TextView) v);
             }
         });
 
@@ -155,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedOptionTextView.setText("Off selected");
+                highlightSelectedButton((TextView) v);
             }
         });
 
@@ -175,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Add secondary options below the selected button
         mainLayout.addView(secondaryOptions, index + 1);
+
+        // Update the current selected primary button and secondary options
+        currentSelectedPrimaryButton = selectedButton;
+        currentSecondaryOptions = secondaryOptions;
     }
 
     private void showTimePickerDialog() {
@@ -204,6 +160,17 @@ public class MainActivity extends AppCompatActivity {
         button.setTypeface(null, Typeface.BOLD);
         button.setBackgroundResource(R.drawable.secondary_button_design);
         return button;
+    }
+
+    private void highlightSelectedButton(TextView selectedButton) {
+        if (currentHighlightedButton != null) {
+            // Reset the background of the previously highlighted button
+            currentHighlightedButton.setBackgroundResource(R.drawable.secondary_button_design);
+        }
+
+        // Highlight the selected button
+        selectedButton.setBackgroundResource(R.drawable.selected_button_design);
+        currentHighlightedButton = selectedButton;
     }
 
     private int dpToPx(float dp, DisplayMetrics metrics) {
